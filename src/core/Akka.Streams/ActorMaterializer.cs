@@ -198,6 +198,7 @@ namespace Akka.Streams
                 syncProcessingLimit: config.GetInt("sync-processing-limit"));
         }
 
+        private const int DefaultlMaxFixedbufferSize = 1000;
         public readonly int InitialInputBufferSize;
         public readonly int MaxInputBufferSize;
         public readonly string Dispatcher;
@@ -210,7 +211,7 @@ namespace Akka.Streams
         public readonly int MaxFixedBufferSize;
         public readonly int SyncProcessingLimit;
 
-        public ActorMaterializerSettings(int initialInputBufferSize, int maxInputBufferSize, string dispatcher, Decider supervisionDecider, StreamSubscriptionTimeoutSettings subscriptionTimeoutSettings, bool isDebugLogging, int outputBurstLimit, bool isFuzzingMode, bool isAutoFusing, int maxFixedBufferSize, int syncProcessingLimit)
+        public ActorMaterializerSettings(int initialInputBufferSize, int maxInputBufferSize, string dispatcher, Decider supervisionDecider, StreamSubscriptionTimeoutSettings subscriptionTimeoutSettings, bool isDebugLogging, int outputBurstLimit, bool isFuzzingMode, bool isAutoFusing, int maxFixedBufferSize, int syncProcessingLimit = DefaultlMaxFixedbufferSize)
         {
             InitialInputBufferSize = initialInputBufferSize;
             MaxInputBufferSize = maxInputBufferSize;
