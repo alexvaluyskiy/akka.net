@@ -8,7 +8,7 @@
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.IO;
-using ByteString = Google.ProtocolBuffers.ByteString;
+using ByteString = Google.Protobuf.ByteString;
 
 namespace Akka.Remote.Transport.AkkaIO
 {
@@ -136,7 +136,9 @@ namespace Akka.Remote.Transport.AkkaIO
             if (message is ByteString)
             {
                 var bs = message as ByteString;
-                var buffer = ByteString.Unsafe.GetBuffer(bs);
+                var buffer = bs.ToByteArray();
+                // TODO performance, was:
+                // var buffer = ByteString.Unsafe.GetBuffer(bs);
                 var builder = new ByteStringBuilder();
                 builder.PutInt(buffer.Length, ByteOrder.BigEndian);
                 builder.PutBytes(buffer);
