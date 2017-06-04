@@ -12,5 +12,12 @@
     <XunitVersion>2.3.0-beta2-*</XunitVersion>
     <AkkaPackageTags>akka;actors;actor model;Akka;concurrency</AkkaPackageTags>
   </PropertyGroup>
-  
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>$(SolutionDir)/Akka.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="5.11.0.1761" />
+  </ItemGroup>
 </Project>
