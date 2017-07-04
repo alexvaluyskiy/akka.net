@@ -5,7 +5,7 @@
     <AssemblyTitle>Akka.Persistence.Sql.Common</AssemblyTitle>
     <Description>Akka.NET Persistence ADO.NET middleware</Description>
     <VersionSuffix>beta</VersionSuffix>
-    <TargetFrameworks>net45;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <PackageTags>$(AkkaPackageTags);persistence;eventsource;sql</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.1</NetStandardImplicitPackageVersion>
@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
   </ItemGroup>
 
@@ -28,7 +29,7 @@
     <DefineConstants>$(DefineConstants);SERIALIZATION;CONFIGURATION</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);CORECLR</DefineConstants>
   </PropertyGroup>
 
