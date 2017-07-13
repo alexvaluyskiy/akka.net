@@ -1,27 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Akka.Actor;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Jobs;
-using BenchmarkDotNet.Toolchains.CsProj;
+using BenchmarkDotNet.Exporters;
 
 namespace Akka.Benchmarks
 {
-    public class MyConfig : ManualConfig
-    {
-        public MyConfig()
-        {
-            Add(Job.Default.With(Runtime.Clr).With(Jit.RyuJit).With(Platform.X64).WithId("NET4.7_RyuJIT-x64"));
-            Add(Job.Default.With(Runtime.Clr).With(Jit.LegacyJit).With(Platform.X86).WithId("NET4.7_LegacyJit-x86"));
-            Add(Job.Default.With(Runtime.Clr).With(Jit.LegacyJit).With(Platform.X64).WithId("NET4.7_LegacyJit-x64"));
-            Add(Job.Default.With(Runtime.Core).With(CsProjCoreToolchain.NetCoreApp11).WithId("Core1.1-x64"));
-        }
-    }
-
     [Config(typeof(MyConfig))]
     [MemoryDiagnoser]
     public class ActorPathBenchmarks
@@ -82,7 +68,19 @@ namespace Akka.Benchmarks
         [Benchmark]
         public ActorPath ActorPath_Concat_Operator()
         {
-            return RootAddress / "user" / "foo";
+            return (RootAddress / "user" / "foo");
+        }
+		
+		[Benchmark]
+        public string ActorPath_ToStringWithAddress()
+        {
+            return TestActorPath.ToStringWithAddress();
+        }
+		
+		[Benchmark]
+        public string ActorPath_ToSerializationFormat()
+        {
+            return TestActorPath.ToSerializationFormat();
         }
     }
 }
