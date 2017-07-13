@@ -1,5 +1,7 @@
 ﻿using System;
 using BenchmarkDotNet.Running;
+using System.Threading.Tasks;
+using Akka.Actor;
 
 namespace Akka.Benchmarks
 {
@@ -7,7 +9,8 @@ namespace Akka.Benchmarks
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<ActorPathBenchmarks>();
+            //BenchmarkRunner.Run<ActorPathBenchmarks>();
+            BenchmarkRunner.Run<RemoteSerializationBenchmarks>();
 
             Console.ReadLine();
         }
