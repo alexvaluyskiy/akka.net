@@ -9,8 +9,10 @@ namespace Akka.Benchmarks
     {
         static void Main(string[] args)
         {
-            //BenchmarkRunner.Run<ActorPathBenchmarks>();
-            BenchmarkRunner.Run<RemoteSerializationBenchmarks>();
+            BenchmarkRunner.Run<TypeExtensionsBenchmarks>();
+            //BenchmarkRunner.Run<PrimitiveSerializersBenchmarks>();
+            //BenchmarkRunner.Run<MiscMessageSerializerBenchmarks>();
+            //BenchmarkRunner.Run<SystemMessageSerializerBenchmarks>();
 
             Console.ReadLine();
         }
