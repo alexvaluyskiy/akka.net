@@ -17,7 +17,7 @@ namespace Akka.Remote.Configuration
     ///
     /// <remarks>Note! Part of internal API. Breaking changes may occur without notice. Use at own risk.</remarks>
     /// </summary>
-    internal static class RemoteConfigFactory
+    public static class RemoteConfigFactory
     {
         /// <summary>
         /// Retrieves the default remote options that Akka.NET uses when no configuration has been defined.
