@@ -29,6 +29,7 @@ namespace Akka.Benchmarks
         RandomPool TestRandomPool { get; } = new RandomPool(5, new DefaultResizer(1, 2, 1, 0.2D, 1, 2D, 5), SupervisorStrategy.DefaultStrategy, Dispatchers.DefaultDispatcherId);
         ScatterGatherFirstCompletedPool TestScatterGatherFirstCompletedPool { get; } = new ScatterGatherFirstCompletedPool(5, new DefaultResizer(1, 2, 1, 0.2D, 1, 2D, 5), TimeSpan.FromMinutes(5), SupervisorStrategy.DefaultStrategy, Dispatchers.DefaultDispatcherId);
         TailChoppingPool TestTailChoppingPool { get; } = new TailChoppingPool(5, new DefaultResizer(1, 2, 1, 0.2D, 1, 2D, 5), SupervisorStrategy.DefaultStrategy, Dispatchers.DefaultDispatcherId, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(6));
+        RemoteRouterConfig RemoteRouterConfig { get; }
 
         public MiscMessageSerializerBenchmarks()
         {
@@ -43,6 +44,11 @@ namespace Akka.Benchmarks
                     refresh-interval = 3s
                     max-buffer-size = 100
                 }");
+
+            RemoteRouterConfig = new RemoteRouterConfig(TestRoundRobinPool, new List<Address>
+            {
+                new Address("akka.tcp", "Sys", "test", 5)
+            });
         }
 
         [Benchmark]
@@ -128,12 +134,8 @@ namespace Akka.Benchmarks
         [Benchmark]
         public object MiscMessageSerializer_Serialize_RemoteRouterConfig()
         {
-            var remoteRouterConfig = new RemoteRouterConfig(TestRoundRobinPool, new List<Address>
-            {
-                new Address("akka.tcp", "Sys", "test", 5)
-            });
-            var bytes = MiscMessageSerializer.ToBinary(remoteRouterConfig);
-            var manifest = MiscMessageSerializer.Manifest(remoteRouterConfig);
+            var bytes = MiscMessageSerializer.ToBinary(RemoteRouterConfig);
+            var manifest = MiscMessageSerializer.Manifest(RemoteRouterConfig);
             return MiscMessageSerializer.FromBinary(bytes, manifest);
         }
     }
