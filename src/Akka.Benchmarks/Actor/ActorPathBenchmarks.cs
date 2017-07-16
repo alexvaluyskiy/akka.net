@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
 using Akka.Actor;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Environments;
-using BenchmarkDotNet.Jobs;
-using BenchmarkDotNet.Exporters;
 
-namespace Akka.Benchmarks
+namespace Akka.Benchmarks.Actor
 {
     [Config(typeof(MyConfig))]
     [MemoryDiagnoser]
