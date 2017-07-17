@@ -146,7 +146,7 @@ namespace Akka.Configuration.Hocon
         /// </returns>
         public bool IsString()
         {
-            return Values.Any() && Values.All(v => v.IsString());
+            return Values.Count > 0 && Values.All(v => v.IsString());
         }
 
         private string ConcatString()
@@ -360,6 +360,8 @@ namespace Akka.Configuration.Hocon
             return GetArray() != null;
         }
 
+        private static readonly Regex TimeSpanRegex = new Regex(@"^(?<value>([0-9]+(\.[0-9]+)?))\s*(?<unit>(nanoseconds|nanosecond|nanos|nano|ns|microseconds|microsecond|micros|micro|us|milliseconds|millisecond|millis|milli|ms|seconds|second|s|minutes|minute|m|hours|hour|h|days|day|d))$", RegexOptions.Compiled);
+
         /// <summary>
         /// Retrieves the time span value from this <see cref="HoconValue"/>.
         /// </summary>
@@ -372,7 +374,7 @@ namespace Akka.Configuration.Hocon
         {
             string res = GetString();
 
-            var match = Regex.Match(res, @"^(?<value>([0-9]+(\.[0-9]+)?))\s*(?<unit>(nanoseconds|nanosecond|nanos|nano|ns|microseconds|microsecond|micros|micro|us|milliseconds|millisecond|millis|milli|ms|seconds|second|s|minutes|minute|m|hours|hour|h|days|day|d))$");
+            var match = TimeSpanRegex.Match(res);
             if (match.Success) 
             {
                 var u = match.Groups["unit"].Value;
