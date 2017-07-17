@@ -10,6 +10,8 @@ namespace Akka.Benchmarks
     {
         static void Main(string[] args)
         {
+            BenchmarkRunner.Run<ConfigBenchmarks>();
+
             BenchmarkRunner.Run<ActorSelectionBenchmarks>();
             BenchmarkRunner.Run<ActorPathBenchmarks>();
             BenchmarkRunner.Run<TypeExtensionsBenchmarks>();
