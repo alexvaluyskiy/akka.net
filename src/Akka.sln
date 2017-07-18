@@ -176,6 +176,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpawnBenchmark", "benchmark
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RemotePingPong", "benchmark\RemotePingPong\RemotePingPong.csproj", "{5AA81B79-34DD-4DD7-9D40-A5CA389786DF}"
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Benchmarks", "Akka.Benchmarks\Akka.Benchmarks.csproj", "{CAD1CE4C-A6A6-4A78-A6F0-0FBF7D8A01FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Benchmarks", "benchmark\Akka.Benchmarks\Akka.Benchmarks.csproj", "{CAD1CE4C-A6A6-4A78-A6F0-0FBF7D8A01FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
