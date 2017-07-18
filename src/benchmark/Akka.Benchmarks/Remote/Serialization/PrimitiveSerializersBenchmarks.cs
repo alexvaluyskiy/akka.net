@@ -12,7 +12,6 @@ namespace Akka.Benchmarks
     {
         private readonly ActorSystem System;
         private readonly PrimitiveSerializers PrimitiveSerializer;
-        private static Config TestConfig = RemoteConfigFactory.Default();
 
         public PrimitiveSerializersBenchmarks()
         {

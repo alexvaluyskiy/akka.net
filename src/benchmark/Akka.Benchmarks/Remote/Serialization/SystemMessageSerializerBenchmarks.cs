@@ -14,7 +14,6 @@ namespace Akka.Benchmarks
     {
         private readonly ActorSystem System;
         private readonly SystemMessageSerializer SystemMessageSerializer;
-        private static Config TestConfig = RemoteConfigFactory.Default();
 
         IActorRef LocalActorRef { get; }
         Create TestCreate { get; }
