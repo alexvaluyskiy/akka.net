@@ -171,7 +171,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Tests.Performa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.DistributedData.LightningDB", "contrib\cluster\Akka.DistributedData.LightningDB\Akka.DistributedData.LightningDB.csproj", "{99CCB7CA-E1EE-4497-BF52-2200A0EC5CB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Benchmarks", "Akka.Benchmarks\Akka.Benchmarks.csproj", "{CAD1CE4C-A6A6-4A78-A6F0-0FBF7D8A01FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Benchmarks", "benchmark\Akka.Benchmarks\Akka.Benchmarks.csproj", "{CAD1CE4C-A6A6-4A78-A6F0-0FBF7D8A01FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
