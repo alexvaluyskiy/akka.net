@@ -78,5 +78,17 @@ namespace Akka.Benchmarks.Actor
         {
             return TestActorPath.ToSerializationFormat();
         }
+
+        [Benchmark]
+        public bool ActorPath_Equals()
+        {
+            return TestActorPath.Equals(TestActorPath);
+        }
+
+        [Benchmark]
+        public int ActorPath_GetHashCode()
+        {
+            return TestActorPath.GetHashCode();
+        }
     }
 }
