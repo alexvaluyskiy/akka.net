@@ -59,6 +59,12 @@ namespace Akka.Benchmarks.Actor
         {
             return TestActorSelection.ResolveOne(TimeSpan.FromSeconds(3)).Result;
         }
+		
+		[Benchmark]
+        public string ActorSelection_ToString()
+        {
+            return TestActorSelection.ToString();
+        }
 
         private class BenchmarkActor : UntypedActor
         {
