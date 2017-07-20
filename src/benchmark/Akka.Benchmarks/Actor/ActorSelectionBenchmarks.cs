@@ -2,14 +2,13 @@
 using System.Threading;
 using Akka.Actor;
 using Akka.Configuration;
-using Akka.Remote.Configuration;
-using Akka.Util.Internal;
 using BenchmarkDotNet.Attributes;
 
 namespace Akka.Benchmarks.Actor
 {
     [Config(typeof(MyConfig))]
     [MemoryDiagnoser]
+    [BenchmarkCategory("actor")]
     public class ActorSelectionBenchmarks
     {
         private readonly ActorSystem System;
@@ -20,7 +19,7 @@ namespace Akka.Benchmarks.Actor
         public ActorSelectionBenchmarks()
         {
             var config = ConfigurationFactory.ParseString("akka.suppress-json-serializer-warning=true");
-            System = ActorSystem.Create("RemoteSerializationBenchmarks", config);
+            System = ActorSystem.Create("ActorSelectionBenchmarks", config);
             System.ActorOf(Props.Create(() => new BenchmarkActor(ResetEvent)), "someactor");
             TestActorSelection = System.ActorSelection("akka://RemoteSerializationBenchmarks/user/someactor");
             TestSender = System.ActorOf(Props.Empty, "somesender");

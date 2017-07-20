@@ -9,6 +9,7 @@ namespace Akka.Benchmarks.Actor
 {
     [Config(typeof(MyConfig))]
     [MemoryDiagnoser]
+    [BenchmarkCategory("actor")]
     public class ConfigBenchmarks
     {
         private Config TestConfiguration { get; } = @"

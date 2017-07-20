@@ -8,6 +8,7 @@ namespace Akka.Benchmarks
 {
     [Config(typeof(MyConfig))]
     [MemoryDiagnoser]
+    [BenchmarkCategory("serialization")]
     public class PrimitiveSerializersBenchmarks
     {
         private readonly ActorSystem System;
