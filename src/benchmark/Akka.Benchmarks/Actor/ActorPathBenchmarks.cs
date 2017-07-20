@@ -6,6 +6,7 @@ namespace Akka.Benchmarks.Actor
 {
     [Config(typeof(MyConfig))]
     [MemoryDiagnoser]
+    [BenchmarkCategory("actor")]
     public class ActorPathBenchmarks
     {
         private static readonly ActorPath TestActorPath = ActorPath.Parse("akka.tcp://Sys@localhost:9091/user/foo");

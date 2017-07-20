@@ -10,16 +10,19 @@ namespace Akka.Benchmarks
     {
         static void Main(string[] args)
         {
-            //BenchmarkRunner.Run<ConfigBenchmarks>();
+            BenchmarkRunner.Run<RouterTellBenchmarks>();
+            BenchmarkRunner.Run<ActorRefTellBenchmarks>();
 
-            //BenchmarkRunner.Run<ActorRefBenchmarks>();
-            //BenchmarkRunner.Run<ActorSelectionBenchmarks>();
+            BenchmarkRunner.Run<InboxBenchmarks>();
+            BenchmarkRunner.Run<ConfigBenchmarks>();
+
+            BenchmarkRunner.Run<ActorSelectionBenchmarks>();
             BenchmarkRunner.Run<ActorPathBenchmarks>();
-            //BenchmarkRunner.Run<TypeExtensionsBenchmarks>();
+            BenchmarkRunner.Run<TypeExtensionsBenchmarks>();
 
-            //BenchmarkRunner.Run<PrimitiveSerializersBenchmarks>();
-            //BenchmarkRunner.Run<MiscMessageSerializerBenchmarks>();
-            //BenchmarkRunner.Run<SystemMessageSerializerBenchmarks>();
+            BenchmarkRunner.Run<PrimitiveSerializersBenchmarks>();
+            BenchmarkRunner.Run<MiscMessageSerializerBenchmarks>();
+            BenchmarkRunner.Run<SystemMessageSerializerBenchmarks>();
 
             Console.ReadLine();
         }

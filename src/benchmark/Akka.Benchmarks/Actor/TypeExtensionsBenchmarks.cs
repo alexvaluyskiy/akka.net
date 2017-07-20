@@ -10,6 +10,7 @@ namespace Akka.Benchmarks
 {
     [Config(typeof(MyConfig))]
     [MemoryDiagnoser]
+    [BenchmarkCategory("actor")]
     public class TypeExtensionsBenchmarks
     {
         private Type StandardType = typeof(string);
