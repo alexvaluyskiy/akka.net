@@ -10,6 +10,8 @@ namespace Akka.Benchmarks
     {
         static void Main(string[] args)
         {
+            BenchmarkRunner.Run<ActorSystemBenchmarks>();
+
             BenchmarkRunner.Run<RouterTellBenchmarks>();
             BenchmarkRunner.Run<ActorRefTellBenchmarks>();
 
