@@ -101,4 +101,72 @@ namespace Akka.Benchmarks.Actor
             public int Age { get; }
         }
     }
+
+    [Config(typeof(MyConfig))]
+    [MemoryDiagnoser]
+    [BenchmarkCategory("actor")]
+    public class ActorRefSpawnBenchmarks
+    {
+        private ActorSystem System;
+        private Config config = ConfigurationFactory.ParseString("akka.suppress-json-serializer-warning=true");
+        private IActorRef TestActor;
+
+        [IterationSetup]
+        public void IterationSetup()
+        {
+            System = ActorSystem.Create("ActorRefSpawnBenchmarks", config);
+        }
+
+        [IterationCleanup]
+        public void IteratioIterationCleanupnSetup()
+        {
+            System.Terminate().Wait();
+        }
+
+        [Benchmark]
+        public void System_ActorOf()
+        {
+            System.ActorOf(Props.Create<BenchmarkActor>());
+        }
+
+        [Benchmark]
+        public void System_ActorOf_with_child()
+        {
+            System.ActorOf(BenchmarkWithChildActor.Props(1, 2));
+        }
+
+        private class BenchmarkActor : UntypedActor
+        {
+            protected override void OnReceive(object message)
+            {
+            }
+        }
+
+        private class BenchmarkWithChildActor : UntypedActor
+        {
+            private readonly int _position;
+            private readonly int _maxPosition;
+
+            public BenchmarkWithChildActor(int position, int maxPosition)
+            {
+                _position = position;
+                _maxPosition = maxPosition;
+            }
+
+            protected override void PreStart()
+            {
+                if (_position < _maxPosition)
+                {
+                    Context.ActorOf(Props(_position + 1, _maxPosition));
+                }
+            }
+
+            protected override void OnReceive(object message)
+            {
+            }
+
+            public static Props Props(int position, int maxPosition) =>
+                Akka.Actor.Props.Create<BenchmarkWithChildActor>(position, maxPosition);
+        }
+    }
 }

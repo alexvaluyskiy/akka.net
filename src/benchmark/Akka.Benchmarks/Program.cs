@@ -3,6 +3,7 @@ using BenchmarkDotNet.Running;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Benchmarks.Actor;
+using Akka.Benchmarks.Remote.Serialization;
 
 namespace Akka.Benchmarks
 {
@@ -14,6 +15,7 @@ namespace Akka.Benchmarks
 
             BenchmarkRunner.Run<RouterTellBenchmarks>();
             BenchmarkRunner.Run<ActorRefTellBenchmarks>();
+            BenchmarkRunner.Run<ActorRefSpawnBenchmarks>();
 
             BenchmarkRunner.Run<InboxBenchmarks>();
             BenchmarkRunner.Run<ConfigBenchmarks>();
@@ -22,6 +24,7 @@ namespace Akka.Benchmarks
             BenchmarkRunner.Run<ActorPathBenchmarks>();
             BenchmarkRunner.Run<TypeExtensionsBenchmarks>();
 
+            BenchmarkRunner.Run<BaseSerializationBenchmarks>();
             BenchmarkRunner.Run<PrimitiveSerializersBenchmarks>();
             BenchmarkRunner.Run<MiscMessageSerializerBenchmarks>();
             BenchmarkRunner.Run<SystemMessageSerializerBenchmarks>();
