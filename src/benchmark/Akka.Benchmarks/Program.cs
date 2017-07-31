@@ -24,6 +24,7 @@ namespace Akka.Benchmarks
             BenchmarkRunner.Run<ActorPathBenchmarks>();
             BenchmarkRunner.Run<TypeExtensionsBenchmarks>();
 
+            BenchmarkRunner.Run<MessageSerializerBenchmarks>();
             BenchmarkRunner.Run<SerializationBenchmarks>();
             BenchmarkRunner.Run<BaseSerializerBenchmarks>();
             BenchmarkRunner.Run<PrimitiveSerializersBenchmarks>();
