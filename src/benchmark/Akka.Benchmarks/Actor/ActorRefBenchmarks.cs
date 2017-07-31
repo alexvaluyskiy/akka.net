@@ -118,7 +118,7 @@ namespace Akka.Benchmarks.Actor
         }
 
         [IterationCleanup]
-        public void IteratioIterationCleanupnSetup()
+        public void IterationCleanup()
         {
             System.Terminate().Wait();
         }

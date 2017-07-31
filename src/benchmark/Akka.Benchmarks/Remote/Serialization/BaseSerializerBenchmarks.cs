@@ -10,14 +10,14 @@ namespace Akka.Benchmarks.Remote.Serialization
     [Config(typeof(MyConfig))]
     [MemoryDiagnoser]
     [BenchmarkCategory("serialization")]
-    public class BaseSerializationBenchmarks
+    public class BaseSerializerBenchmarks
     {
         private readonly ActorSystem System;
         private readonly PrimitiveSerializers BaseSerializer;
         private byte[] TestSerializedInteger = Convert.FromBase64String("xwEAAA==");
         private Address TestAddress = new Address("akka.tcp", "BaseSerializationBenchmarks", "test", 5000);
 
-        public BaseSerializationBenchmarks()
+        public BaseSerializerBenchmarks()
         {
             var config = ConfigurationFactory.ParseString("akka.suppress-json-serializer-warning=true").WithFallback(RemoteConfigFactory.Default());
             System = ActorSystem.Create("BaseSerializationBenchmarks", config);

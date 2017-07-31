@@ -3,6 +3,7 @@ using BenchmarkDotNet.Attributes;
 using Akka.Remote.Serialization;
 using Akka.Configuration;
 using Akka.Remote.Configuration;
+using System;
 
 namespace Akka.Benchmarks
 {
