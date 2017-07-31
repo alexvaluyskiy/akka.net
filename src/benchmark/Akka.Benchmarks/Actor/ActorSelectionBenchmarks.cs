@@ -21,7 +21,7 @@ namespace Akka.Benchmarks.Actor
             var config = ConfigurationFactory.ParseString("akka.suppress-json-serializer-warning=true");
             System = ActorSystem.Create("ActorSelectionBenchmarks", config);
             System.ActorOf(Props.Create(() => new BenchmarkActor(ResetEvent)), "someactor");
-            TestActorSelection = System.ActorSelection("akka://RemoteSerializationBenchmarks/user/someactor");
+            TestActorSelection = System.ActorSelection("akka://ActorSelectionBenchmarks/user/someactor");
             TestSender = System.ActorOf(Props.Empty, "somesender");
         }
 
@@ -34,7 +34,7 @@ namespace Akka.Benchmarks.Actor
         [Benchmark]
         public ActorSelection ActorSelection_initialization_absolute_path()
         {
-            return System.ActorSelection("akka://RemoteSerializationBenchmarks/user/someactor");
+            return System.ActorSelection("akka://ActorSelectionBenchmarks/user/someactor");
         }
 
         [Benchmark]
