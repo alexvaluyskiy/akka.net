@@ -62,18 +62,5 @@ namespace Akka.Benchmarks.Remote.Serialization
         {
             return MessageSerializer.Deserialize(System, TestComplexPayload);
         }
-
-        private class ComplexType
-        {
-            public ComplexType(string name, int age)
-            {
-                Name = name;
-                Age = age;
-            }
-
-            public string Name { get; }
-
-            public int Age { get; }
-        }
     }
 }

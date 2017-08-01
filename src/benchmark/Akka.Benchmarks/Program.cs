@@ -3,6 +3,7 @@ using BenchmarkDotNet.Running;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Benchmarks.Actor;
+using Akka.Benchmarks.Remote;
 using Akka.Benchmarks.Remote.Serialization;
 
 namespace Akka.Benchmarks
@@ -24,6 +25,7 @@ namespace Akka.Benchmarks
             BenchmarkRunner.Run<ActorPathBenchmarks>();
             BenchmarkRunner.Run<TypeExtensionsBenchmarks>();
 
+            BenchmarkRunner.Run<AkkaPduCodecBenchmarks>();
             BenchmarkRunner.Run<MessageSerializerBenchmarks>();
             BenchmarkRunner.Run<SerializationBenchmarks>();
             BenchmarkRunner.Run<BaseSerializerBenchmarks>();
