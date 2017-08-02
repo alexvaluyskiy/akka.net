@@ -27,6 +27,7 @@ using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using DotNetty.Transport.Libuv;
 
 namespace Akka.Remote.Transport.DotNetty
 {
@@ -141,10 +142,12 @@ namespace Akka.Remote.Transport.DotNetty
                 config = heliosFallbackConfig.WithFallback(config);
             }
 
+
             Settings = DotNettyTransportSettings.Create(config);
             Log = Logging.GetLogger(System, GetType());
-            serverEventLoopGroup = new MultithreadEventLoopGroup(Settings.ServerSocketWorkerPoolSize);
-            clientEventLoopGroup = new MultithreadEventLoopGroup(Settings.ClientSocketWorkerPoolSize);
+
+            serverEventLoopGroup = new MultithreadEventLoopGroup(_ => new EventLoop(), Settings.ServerSocketWorkerPoolSize);
+            clientEventLoopGroup = new MultithreadEventLoopGroup(_ => new EventLoop(), Settings.ClientSocketWorkerPoolSize);
             ConnectionGroup = new ConcurrentSet<IChannel>();
             AssociationListenerPromise = new TaskCompletionSource<IAssociationEventListener>();
 

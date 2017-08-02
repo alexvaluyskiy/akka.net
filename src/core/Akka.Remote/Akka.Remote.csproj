@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetty.Handlers" version="0.4.6" />
+    <PackageReference Include="DotNetty.Handlers" version="0.4.6-beta" />
+    <PackageReference Include="DotNetty.Transport.Libuv" version="0.4.6-beta" />
     <PackageReference Include="Google.Protobuf" Version="3.3.0" />
   </ItemGroup>
 
