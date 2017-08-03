@@ -26,11 +26,13 @@ namespace Akka.Benchmarks
             BenchmarkRunner.Run<TypeExtensionsBenchmarks>();
 
             BenchmarkRunner.Run<AkkaPduCodecBenchmarks>();
-            BenchmarkRunner.Run<MessageSerializerBenchmarks>();
-            BenchmarkRunner.Run<SerializationBenchmarks>();
             BenchmarkRunner.Run<BaseSerializerBenchmarks>();
+            BenchmarkRunner.Run<SerializationBenchmarks>();
+            
             BenchmarkRunner.Run<PrimitiveSerializersBenchmarks>();
             BenchmarkRunner.Run<SystemMessageSerializerBenchmarks>();
+            BenchmarkRunner.Run<DaemonMsgCreateSerializerBenchmarks>();
+            BenchmarkRunner.Run<MessageContainerSerializerBenchmarks>();
 
             Console.ReadLine();
         }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Akka.Actor;
-using BenchmarkDotNet.Attributes;
-using Akka.Remote.Serialization;
 using Akka.Configuration;
 using Akka.Dispatch;
 using Akka.Dispatch.SysMsg;
@@ -10,8 +8,9 @@ using Akka.Remote;
 using Akka.Remote.Configuration;
 using Akka.Remote.Routing;
 using Akka.Routing;
+using BenchmarkDotNet.Attributes;
 
-namespace Akka.Benchmarks
+namespace Akka.Benchmarks.Remote.Serialization
 {
     [Config(typeof(MyConfig))]
     [MemoryDiagnoser]
