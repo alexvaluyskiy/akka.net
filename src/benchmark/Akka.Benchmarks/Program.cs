@@ -30,7 +30,6 @@ namespace Akka.Benchmarks
             BenchmarkRunner.Run<SerializationBenchmarks>();
             BenchmarkRunner.Run<BaseSerializerBenchmarks>();
             BenchmarkRunner.Run<PrimitiveSerializersBenchmarks>();
-            BenchmarkRunner.Run<MiscMessageSerializerBenchmarks>();
             BenchmarkRunner.Run<SystemMessageSerializerBenchmarks>();
 
             Console.ReadLine();
