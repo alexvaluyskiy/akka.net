@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp1.1;net47</TargetFrameworks>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Content Include="App.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.10.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\Akka.Remote\Akka.Remote.csproj" />
+    <ProjectReference Include="..\..\core\Akka\Akka.csproj" />
+  </ItemGroup>
+
+</Project>
