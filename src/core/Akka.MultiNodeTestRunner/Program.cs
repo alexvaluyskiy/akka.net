@@ -254,7 +254,7 @@ namespace Akka.MultiNodeTestRunner
                                         else
                                         {
                                             fileName = "dotnet";
-                                            sbArguments.Insert(0, $@" -Dmultinode.test-assembly=""{ChangeDllPathPlatform(assemblyPath, "netcoreapp1.1")}"" ");
+                                            sbArguments.Insert(0, $@" -Dmultinode.test-assembly=""{ChangeDllPathPlatform(assemblyPath, "netcoreapp2.0")}"" ");
                                             sbArguments.Insert(0, ntrNetCorePath);
                                         }
                                         ++alternateIndex;

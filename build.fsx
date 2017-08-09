@@ -82,8 +82,8 @@ Target "Build" (fun _ ->
     let sourceBasePath = __SOURCE_DIRECTORY__ @@ "src" @@ "core"
     let ntrBasePath = sourceBasePath @@ "Akka.NodeTestRunner" @@ "bin" @@ "Release"
     let ntrNetPath =  ntrBasePath @@ "net452"
-    let ntrNetCorePath = ntrBasePath @@ "netcoreapp1.1"
-    let mntrPath = sourceBasePath @@ "Akka.MultiNodeTestRunner" @@ "bin" @@ "Release" @@ "netcoreapp1.1"
+    let ntrNetCorePath = ntrBasePath @@ "netcoreapp2.0"
+    let mntrPath = sourceBasePath @@ "Akka.MultiNodeTestRunner" @@ "bin" @@ "Release" @@ "netcoreapp2.0"
     let copyNtrNetToMntrTargetPath = mntrPath @@ "runner" @@ "net"
     let copyNtrNetCoreToMntrTargetPath = mntrPath @@ "runner" @@ "netcore"
 
@@ -176,7 +176,7 @@ Target "RunTestsNetCore" (fun _ ->
 
 Target "MultiNodeTestsNetCore" (fun _ ->
     ActivateFinalTarget "KillCreatedProcesses"
-    let multiNodeTestPath = findToolInSubPath "Akka.MultiNodeTestRunner.dll" (currentDirectory @@ "src" @@ "core" @@ "Akka.MultiNodeTestRunner" @@ "bin" @@ "Release" @@ "netcoreapp1.1")
+    let multiNodeTestPath = findToolInSubPath "Akka.MultiNodeTestRunner.dll" (currentDirectory @@ "src" @@ "core" @@ "Akka.MultiNodeTestRunner" @@ "bin" @@ "Release" @@ "netcoreapp2.0")
 
     let multiNodeTestAssemblies = 
         match getBuildParamOrDefault "incremental" "" with
@@ -217,7 +217,7 @@ Target "MultiNodeTestsNetCore" (fun _ ->
 
 Target "MultiNodeTestsMultiPlatform" (fun _ ->
     ActivateFinalTarget "KillCreatedProcesses"
-    let multiNodeTestPath = findToolInSubPath "Akka.MultiNodeTestRunner.dll" (currentDirectory @@ "src" @@ "core" @@ "Akka.MultiNodeTestRunner" @@ "bin" @@ "Release" @@ "netcoreapp1.1")
+    let multiNodeTestPath = findToolInSubPath "Akka.MultiNodeTestRunner.dll" (currentDirectory @@ "src" @@ "core" @@ "Akka.MultiNodeTestRunner" @@ "bin" @@ "Release" @@ "netcoreapp2.0")
 
     let multiNodeTestAssemblies = 
         match getBuildParamOrDefault "incremental" "" with
