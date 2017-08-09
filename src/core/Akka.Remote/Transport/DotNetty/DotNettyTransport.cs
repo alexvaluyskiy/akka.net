@@ -275,6 +275,7 @@ namespace Akka.Remote.Transport.DotNetty
 
             var client = new Bootstrap()
                 .Group(clientEventLoopGroup)
+                .Channel<TcpChannel>()
                 .Option(ChannelOption.SoReuseaddr, Settings.TcpReuseAddr)
                 .Option(ChannelOption.SoKeepalive, Settings.TcpKeepAlive)
                 .Option(ChannelOption.TcpNodelay, Settings.TcpNoDelay)
@@ -383,6 +384,7 @@ namespace Akka.Remote.Transport.DotNetty
 
             var server = new ServerBootstrap()
                 .Group(serverEventLoopGroup)
+                .Channel<TcpServerChannel>()
                 .Option(ChannelOption.SoReuseaddr, Settings.TcpReuseAddr)
                 .Option(ChannelOption.SoKeepalive, Settings.TcpKeepAlive)
                 .Option(ChannelOption.TcpNodelay, Settings.TcpNoDelay)
