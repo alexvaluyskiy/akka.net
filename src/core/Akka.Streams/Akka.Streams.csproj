@@ -72,7 +72,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>$(DefineConstants);SERIALIZATION;CLONEABLE;AKKAIO</DefineConstants>
+    <DefineConstants>$(DefineConstants);SERIALIZATION;AKKAIO</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
