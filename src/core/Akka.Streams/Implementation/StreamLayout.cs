@@ -2147,7 +2147,6 @@ namespace Akka.Streams.Implementation
             {
             }
 
-#if SERIALIZATION
             /// <summary>
             /// Initializes a new instance of the <see cref="MaterializationPanicException" /> class.
             /// </summary>
@@ -2157,7 +2156,6 @@ namespace Akka.Streams.Implementation
                 : base(info, context)
             {
             }
-#endif
         }
 
         /// <summary>

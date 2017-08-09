@@ -131,7 +131,6 @@ namespace Akka.Persistence
         {
         }
 
-#if SERIALIZATION
         /// <summary>
         /// Initializes a new instance of the <see cref="RecoveryTimedOutException"/> class.
         /// </summary>
@@ -140,7 +139,6 @@ namespace Akka.Persistence
         public RecoveryTimedOutException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>

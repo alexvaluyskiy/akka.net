@@ -28,9 +28,7 @@ namespace Akka.Streams.TestKit.Tests
         public ScriptException(string message) : base(message) { }
         public ScriptException(string message, Exception inner) : base(message, inner) { }
 
-#if SERIALIZATION
         protected ScriptException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-#endif
     }
 
     public abstract class ScriptedTest : AkkaSpec

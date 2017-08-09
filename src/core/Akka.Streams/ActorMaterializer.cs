@@ -237,7 +237,6 @@ namespace Akka.Streams
             Actor = actor;
         }
 
-#if SERIALIZATION
         /// <summary>
         /// Initializes a new instance of the <see cref="AbruptTerminationException" /> class.
         /// </summary>
@@ -247,7 +246,6 @@ namespace Akka.Streams
         {
             Actor = (IActorRef)info.GetValue("Actor", typeof(IActorRef));
         }
-#endif
     }
 
     /// <summary>
@@ -262,14 +260,12 @@ namespace Akka.Streams
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
         public MaterializationException(string message, Exception innerException) : base(message, innerException) { }
 
-#if SERIALIZATION
         /// <summary>
         /// Initializes a new instance of the <see cref="MaterializationException"/> class.
         /// </summary>
         /// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
         /// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
         protected MaterializationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-#endif
     }
 
     /// <summary>

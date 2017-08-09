@@ -8,7 +8,6 @@
     <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
     <PackageTags>$(AkkaPackageTags);persistence;testkit;eventsource;sql;reactive;streams</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.1</NetStandardImplicitPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,10 +16,6 @@
     <ProjectReference Include="..\..\..\core\Akka.Streams.TestKit\Akka.Streams.TestKit.csproj" />
     <PackageReference Include="FluentAssertions" Version="4.14.0" />
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <DefineConstants>$(DefineConstants);SERIALIZATION</DefineConstants>
-  </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);CORECLR</DefineConstants>

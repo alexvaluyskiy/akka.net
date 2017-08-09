@@ -26,8 +26,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <DefineConstants>$(DefineConstants);SERIALIZABLE</DefineConstants>
-    <DefineConstants>$(DefineConstants);SERIALIZABLE;FSCHECK;</DefineConstants>
+    <DefineConstants>$(DefineConstants);FSCHECK</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">

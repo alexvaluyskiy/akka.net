@@ -224,7 +224,6 @@ namespace Akka.Persistence
         {
         }
 
-#if SERIALIZATION
         /// <summary>
         /// Initializes a new instance of the <see cref="MaxUnconfirmedMessagesExceededException"/> class.
         /// </summary>
@@ -233,7 +232,6 @@ namespace Akka.Persistence
         protected MaxUnconfirmedMessagesExceededException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     #endregion
