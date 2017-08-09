@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>$(DefineConstants);CONFIGURATION;APPDOMAIN</DefineConstants>
+    <DefineConstants>$(DefineConstants);CONFIGURATION</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">

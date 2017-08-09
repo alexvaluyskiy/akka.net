@@ -66,40 +66,10 @@ namespace Akka.DI.Core
         {
             var firstTry = Type.GetType(typeName);
             Func<Type> searchForType = () =>
-                GetLoadedAssemblies()
+                AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(x => x.GetTypes())
                     .FirstOrDefault(t => t.Name.Equals(typeName));
             return firstTry ?? searchForType();
-        }
-
-        /// <summary>
-        /// Gets the list of loaded assemblies
-        /// </summary>
-        /// <returns>The list of loaded assemblies</returns>
-        private static IEnumerable<Assembly> GetLoadedAssemblies()
-        {
-#if APPDOMAIN
-            return AppDomain.CurrentDomain.GetAssemblies();
-#elif CORECLR 
-            var assemblies = new List<Assembly>();
-            var dependencies = DependencyContext.Default.RuntimeLibraries;
-            foreach (var library in dependencies)
-            {
-                try
-                {
-                    var assembly = Assembly.Load(new AssemblyName(library.Name));
-                    assemblies.Add(assembly);
-                }
-                catch
-                {
-                    //do nothing can't if can't load assembly
-                }
-            }
-            return assemblies;
-#else
-#warning Method not implemented
-            throw new NotImplementedException();
-#endif
         }
     }
 }
