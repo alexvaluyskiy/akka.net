@@ -38,7 +38,6 @@ namespace Akka.Persistence.Sqlite.Tests
             Assert.Equal("event_journal", config.GetString("table-name"));
             Assert.Equal("journal_metadata", config.GetString("metadata-table-name"));
             Assert.Equal(false, config.GetBoolean("auto-initialize"));
-            Assert.Equal("Akka.Persistence.Sql.Common.Journal.DefaultTimestampProvider, Akka.Persistence.Sql.Common", config.GetString("timestamp-provider"));
         }
 
         [Fact]

@@ -13,12 +13,12 @@ using Xunit.Abstractions;
 
 namespace Akka.Persistence.Sqlite.Tests.Serialization
 {
-    public class SqliteJournalSerializationSpec : JournalSerializationSpec
+    public class BatchingSqliteJournalSerializationSpec : JournalSerializationSpec
     {
         private static AtomicCounter Counter { get; } = new AtomicCounter(0);
 
-        public SqliteJournalSerializationSpec(ITestOutputHelper output)
-            : base(CreateSpecConfig("Filename=file:serialization-journal-" + Counter.IncrementAndGet() + ".db;Mode=Memory;Cache=Shared"), "SqliteJournalSerializationSpec", output)
+        public BatchingSqliteJournalSerializationSpec(ITestOutputHelper output)
+            : base(CreateSpecConfig("Filename=file:serialization-batching-journal-" + Counter.IncrementAndGet() + ".db;Mode=Memory;Cache=Shared"), "SqliteJournalSerializationSpec", output)
         {
         }
 
@@ -36,7 +36,7 @@ namespace Akka.Persistence.Sqlite.Tests.Serialization
                             event-adapter-bindings = {
                                 ""Akka.Persistence.TCK.Serialization.TestJournal+MyPayload3, Akka.Persistence.TCK"" = custom-adapter
                             }
-                            class = ""Akka.Persistence.Sqlite.Journal.SqliteJournal, Akka.Persistence.Sqlite""
+                            class = ""Akka.Persistence.Sqlite.Journal.BatchingSqliteJournal, Akka.Persistence.Sqlite""
                             plugin-dispatcher = ""akka.actor.default-dispatcher""
                             table-name = event_journal
                             metadata-table-name = journal_metadata

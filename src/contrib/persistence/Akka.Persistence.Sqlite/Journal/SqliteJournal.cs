@@ -36,16 +36,11 @@ namespace Akka.Persistence.Sqlite.Journal
                 persistenceIdColumnName: "persistence_id",
                 sequenceNrColumnName: "sequence_nr",
                 payloadColumnName: "payload",
-                manifestColumnName: "manifest",
-                timestampColumnName: "timestamp",
-                isDeletedColumnName: "is_deleted",
                 tagsColumnName: "tags",
                 orderingColumnName: "ordering",
-                serializerIdColumnName: "serializer_id",
                 timeout: config.GetTimeSpan("connection-timeout"),
                 defaultSerializer: config.GetString("serializer")), 
-                    Context.System.Serialization, 
-                    GetTimestampProvider(config.GetString("timestamp-provider")));
+                    Context.System.Serialization);
         }
 
         /// <summary>

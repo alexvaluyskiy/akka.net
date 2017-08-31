@@ -401,35 +401,16 @@ namespace Akka.Persistence.Sql.Common.Journal
         /// </summary>
         protected const int SequenceNrIndex = 1;
 
-        //protected const int TimestampIndex = 2;
-
-        /// <summary>
-        /// Default index of <see cref="IPersistentRepresentation.IsDeleted"/> 
-        /// column get from <see cref="ByPersistenceIdSql"/> query.
-        /// </summary>
-        protected const int IsDeletedIndex = 3;
-
-        /// <summary>
-        /// Default index of <see cref="IPersistentRepresentation.Manifest"/> 
-        /// column get from <see cref="ByPersistenceIdSql"/> query.
-        /// </summary>
-        protected const int ManifestIndex = 4;
-
         /// <summary>
         /// Default index of <see cref="IPersistentRepresentation.Payload"/> 
         /// column get from <see cref="ByPersistenceIdSql"/> query.
         /// </summary>
-        protected const int PayloadIndex = 5;
-
-        /// <summary>
-        /// Default index of <see cref="Serializer.Identifier"/>
-        /// </summary>
-        protected const int SerializerIdIndex = 6;
+        protected const int PayloadIndex = 2;
 
         /// <summary>
         /// Default index of tags column get from <see cref="ByTagSql"/> query.
         /// </summary>
-        protected const int OrderingIndex = 7;
+        protected const int OrderingIndex = 3;
 
         /// <summary>
         /// SQL query executed as result of <see cref="DeleteMessagesTo"/> request to journal.
@@ -552,11 +533,7 @@ namespace Akka.Persistence.Sql.Common.Journal
             var allEventColumnNames = $@"
                 e.{conventions.PersistenceIdColumnName} as PersistenceId, 
                 e.{conventions.SequenceNrColumnName} as SequenceNr, 
-                e.{conventions.TimestampColumnName} as Timestamp, 
-                e.{conventions.IsDeletedColumnName} as IsDeleted, 
-                e.{conventions.ManifestColumnName} as Manifest, 
-                e.{conventions.PayloadColumnName} as Payload,
-                e.{conventions.SerializerIdColumnName} as SerializerId";
+                e.{conventions.PayloadColumnName} as Payload";
 
             AllPersistenceIdsSql = $@"
                 SELECT DISTINCT e.{conventions.PersistenceIdColumnName} as PersistenceId 
@@ -596,21 +573,13 @@ namespace Akka.Persistence.Sql.Common.Journal
                 INSERT INTO {conventions.FullJournalTableName} (
                     {conventions.PersistenceIdColumnName},
                     {conventions.SequenceNrColumnName},
-                    {conventions.TimestampColumnName},
-                    {conventions.IsDeletedColumnName},
-                    {conventions.ManifestColumnName},
                     {conventions.PayloadColumnName},
-                    {conventions.TagsColumnName},
-                    {conventions.SerializerIdColumnName}
+                    {conventions.TagsColumnName}
                 ) VALUES (
                     @PersistenceId, 
                     @SequenceNr,
-                    @Timestamp,
-                    @IsDeleted,
-                    @Manifest,
                     @Payload,
-                    @Tag,
-                    @SerializerId
+                    @Tag
                 )";
         }
 
@@ -1161,32 +1130,13 @@ namespace Akka.Persistence.Sql.Common.Journal
         /// <param name="tags">Optional tags extracted from persistent event payload.</param>
         protected virtual void WriteEvent(TCommand command, IPersistentRepresentation persistent, string tags = "")
         {
-            var payloadType = persistent.Payload.GetType();
-            var serializer = _serialization.FindSerializerForType(payloadType, Setup.DefaultSerializer);
-
-            string manifest = "";
-            if (serializer is SerializerWithStringManifest)
-            {
-                manifest = ((SerializerWithStringManifest)serializer).Manifest(persistent.Payload);
-            }
-            else
-            {
-                if (serializer.IncludeManifest)
-                {
-                    manifest = persistent.Payload.GetType().TypeQualifiedName();
-                }
-            }
-
-            var binary = serializer.ToBinary(persistent.Payload);
+            var serializer = _serialization.FindSerializerFor(persistent);
+            var binary = serializer.ToBinary(persistent);
 
             AddParameter(command, "@PersistenceId", DbType.String, persistent.PersistenceId);
             AddParameter(command, "@SequenceNr", DbType.Int64, persistent.SequenceNr);
-            AddParameter(command, "@Timestamp", DbType.Int64, 0L);
-            AddParameter(command, "@IsDeleted", DbType.Boolean, false);
-            AddParameter(command, "@Manifest", DbType.String, manifest);
             AddParameter(command, "@Payload", DbType.Binary, binary);
             AddParameter(command, "@Tag", DbType.String, tags);
-            AddParameter(command, "@SerializerId", DbType.Int32, serializer.Identifier);
         }
 
         /// <summary>
@@ -1196,27 +1146,8 @@ namespace Akka.Persistence.Sql.Common.Journal
         /// <returns>TBD</returns>
         protected virtual IPersistentRepresentation ReadEvent(DbDataReader reader)
         {
-            var persistenceId = reader.GetString(PersistenceIdIndex);
-            var sequenceNr = reader.GetInt64(SequenceNrIndex);
-            var isDeleted = reader.GetBoolean(IsDeletedIndex);
-            var manifest = reader.GetString(ManifestIndex);
-            var payload = reader[PayloadIndex];
-
-            object deserialized;
-            if (reader.IsDBNull(SerializerIdIndex))
-            {
-                // Support old writes that did not set the serializer id
-                var type = Type.GetType(manifest, true);
-                var deserializer = _serialization.FindSerializerForType(type, Setup.DefaultSerializer);
-                deserialized = deserializer.FromBinary((byte[])payload, type);
-            }
-            else
-            {
-                var serializerId = reader.GetInt32(SerializerIdIndex);
-                deserialized = _serialization.Deserialize((byte[])payload, serializerId, manifest);
-            }
-
-            return new Persistent(deserialized, sequenceNr, persistenceId, manifest, isDeleted, ActorRefs.NoSender, null);
+            var serializer = _serialization.FindSerializerForType(typeof(Persistent));
+            return serializer.FromBinary<Persistent>((byte[])reader[PayloadIndex]);
         }
 
         /// <summary>

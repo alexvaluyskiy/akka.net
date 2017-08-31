@@ -73,7 +73,6 @@ namespace Akka.Persistence.Sql.Common
             SchemaName = config.GetString("schema-name");
             JournalTableName = config.GetString("table-name");
             MetaTableName = config.GetString("metadata-table-name");
-            TimestampProvider = config.GetString("timestamp-provider");
             AutoInitialize = config.GetBoolean("auto-initialize");
         }
     }

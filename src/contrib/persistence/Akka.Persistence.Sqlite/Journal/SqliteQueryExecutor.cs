@@ -22,8 +22,8 @@ namespace Akka.Persistence.Sqlite.Journal
         /// <param name="configuration">TBD</param>
         /// <param name="serialization">TBD</param>
         /// <param name="timestampProvider">TBD</param>
-        public SqliteQueryExecutor(QueryConfiguration configuration, Akka.Serialization.Serialization serialization, ITimestampProvider timestampProvider) 
-            : base(configuration, serialization, timestampProvider)
+        public SqliteQueryExecutor(QueryConfiguration configuration, Akka.Serialization.Serialization serialization) 
+            : base(configuration, serialization)
         {
             ByTagSql = base.ByTagSql + " LIMIT @Take";
 
@@ -32,12 +32,8 @@ namespace Akka.Persistence.Sqlite.Journal
                     {configuration.OrderingColumnName} INTEGER PRIMARY KEY NOT NULL,
                     {configuration.PersistenceIdColumnName} VARCHAR(255) NOT NULL,
                     {configuration.SequenceNrColumnName} INTEGER(8) NOT NULL,
-                    {configuration.IsDeletedColumnName} INTEGER(1) NOT NULL,
-                    {configuration.ManifestColumnName} VARCHAR(255) NULL,
-                    {configuration.TimestampColumnName} INTEGER NOT NULL,
                     {configuration.PayloadColumnName} BLOB NOT NULL,
                     {configuration.TagsColumnName} VARCHAR(2000) NULL,
-                    {configuration.SerializerIdColumnName} INTEGER(4),
                     UNIQUE ({configuration.PersistenceIdColumnName}, {configuration.SequenceNrColumnName})
                 );";
 

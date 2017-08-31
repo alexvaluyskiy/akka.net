@@ -143,23 +143,7 @@ namespace Akka.Persistence.Sql.Common.Journal
         /// <summary>
         /// TBD
         /// </summary>
-        public readonly string ManifestColumnName;
-        /// <summary>
-        /// TBD
-        /// </summary>
-        public readonly string TimestampColumnName;
-        /// <summary>
-        /// TBD
-        /// </summary>
-        public readonly string IsDeletedColumnName;
-        /// <summary>
-        /// TBD
-        /// </summary>
         public readonly string OrderingColumnName;
-        /// <summary>
-        /// TBD
-        /// </summary>
-        public readonly string SerializerIdColumnName;
 
         /// <summary>
         /// TBD
@@ -180,12 +164,8 @@ namespace Akka.Persistence.Sql.Common.Journal
         /// <param name="persistenceIdColumnName">TBD</param>
         /// <param name="sequenceNrColumnName">TBD</param>
         /// <param name="payloadColumnName">TBD</param>
-        /// <param name="manifestColumnName">TBD</param>
-        /// <param name="timestampColumnName">TBD</param>
-        /// <param name="isDeletedColumnName">TBD</param>
         /// <param name="tagsColumnName">TBD</param>
         /// <param name="orderingColumnName">TBD</param>
-        /// <param name="serializerIdColumnName">TBD</param>
         /// <param name="timeout">TBD</param>
         /// <param name="defaultSerializer">The default serializer used when not type override matching is found</param>
         public QueryConfiguration(
@@ -195,12 +175,8 @@ namespace Akka.Persistence.Sql.Common.Journal
             string persistenceIdColumnName,
             string sequenceNrColumnName,
             string payloadColumnName,
-            string manifestColumnName,
-            string timestampColumnName,
-            string isDeletedColumnName,
             string tagsColumnName,
             string orderingColumnName,
-            string serializerIdColumnName,
             TimeSpan timeout,
             string defaultSerializer)
         {
@@ -210,14 +186,10 @@ namespace Akka.Persistence.Sql.Common.Journal
             PersistenceIdColumnName = persistenceIdColumnName;
             SequenceNrColumnName = sequenceNrColumnName;
             PayloadColumnName = payloadColumnName;
-            ManifestColumnName = manifestColumnName;
-            TimestampColumnName = timestampColumnName;
-            IsDeletedColumnName = isDeletedColumnName;
             Timeout = timeout;
             TagsColumnName = tagsColumnName;
             OrderingColumnName = orderingColumnName;
             DefaultSerializer = defaultSerializer;
-            SerializerIdColumnName = serializerIdColumnName;
         }
 
         /// <summary>
@@ -248,27 +220,11 @@ namespace Akka.Persistence.Sql.Common.Journal
         /// <summary>
         /// TBD
         /// </summary>
-        protected const int TimestampIndex = 2;
+        protected const int PayloadIndex = 2;
         /// <summary>
         /// TBD
         /// </summary>
-        protected const int IsDeletedIndex = 3;
-        /// <summary>
-        /// TBD
-        /// </summary>
-        protected const int ManifestIndex = 4;
-        /// <summary>
-        /// TBD
-        /// </summary>
-        protected const int PayloadIndex = 5;
-        /// <summary>
-        /// TBD
-        /// </summary>
-        protected const int SerializerIdIndex = 6;
-        /// <summary>
-        /// TBD
-        /// </summary>
-        protected const int OrderingIndex = 7;
+        protected const int OrderingIndex = 3;
 
         /// <summary>
         /// TBD
@@ -279,10 +235,7 @@ namespace Akka.Persistence.Sql.Common.Journal
         /// TBD
         /// </summary>
         protected Akka.Serialization.Serialization Serialization;
-        /// <summary>
-        /// TBD
-        /// </summary>
-        protected ITimestampProvider TimestampProvider;
+
         /// <summary>
         /// TBD
         /// </summary>
@@ -293,21 +246,15 @@ namespace Akka.Persistence.Sql.Common.Journal
         /// </summary>
         /// <param name="configuration">TBD</param>
         /// <param name="serialization">TBD</param>
-        /// <param name="timestampProvider">TBD</param>
-        protected AbstractQueryExecutor(QueryConfiguration configuration, Akka.Serialization.Serialization serialization, ITimestampProvider timestampProvider)
+        protected AbstractQueryExecutor(QueryConfiguration configuration, Akka.Serialization.Serialization serialization)
         {
-            TimestampProvider = timestampProvider;
             Serialization = serialization;
             Configuration = configuration;
 
             var allEventColumnNames = $@"
                 e.{Configuration.PersistenceIdColumnName} as PersistenceId, 
                 e.{Configuration.SequenceNrColumnName} as SequenceNr, 
-                e.{Configuration.TimestampColumnName} as Timestamp, 
-                e.{Configuration.IsDeletedColumnName} as IsDeleted, 
-                e.{Configuration.ManifestColumnName} as Manifest, 
-                e.{Configuration.PayloadColumnName} as Payload,
-                e.{Configuration.SerializerIdColumnName} as SerializerId";
+                e.{Configuration.PayloadColumnName} as Payload";
 
             AllPersistenceIdsSql = $@"
                 SELECT DISTINCT e.{Configuration.PersistenceIdColumnName} as PersistenceId 
@@ -347,27 +294,14 @@ namespace Akka.Persistence.Sql.Common.Journal
                 INSERT INTO {Configuration.FullJournalTableName} (
                     {Configuration.PersistenceIdColumnName},
                     {Configuration.SequenceNrColumnName},
-                    {Configuration.TimestampColumnName},
-                    {Configuration.IsDeletedColumnName},
-                    {Configuration.ManifestColumnName},
                     {Configuration.PayloadColumnName},
-                    {Configuration.TagsColumnName},
-                    {Configuration.SerializerIdColumnName}
+                    {Configuration.TagsColumnName}
                 ) VALUES (
                     @PersistenceId, 
                     @SequenceNr,
-                    @Timestamp,
-                    @IsDeleted,
-                    @Manifest,
                     @Payload,
-                    @Tag,
-                    @SerializerId
+                    @Tag
                 )";
-
-            QueryEventsSql = $@"
-                SELECT {allEventColumnNames}
-                FROM {Configuration.FullJournalTableName} e
-                WHERE ";
         }
 
         /// <summary>
@@ -406,12 +340,6 @@ namespace Akka.Persistence.Sql.Common.Journal
         /// TBD
         /// </summary>
         protected abstract string CreateMetaTableSql { get; }
-
-        /// <summary>
-        /// TBD
-        /// </summary>
-        [Obsolete]
-        protected string QueryEventsSql { get; }
 
         /// <summary>
         /// TBD
@@ -641,31 +569,12 @@ namespace Akka.Persistence.Sql.Common.Journal
         /// <returns>TBD</returns>
         protected virtual void WriteEvent(DbCommand command, IPersistentRepresentation e, IImmutableSet<string> tags)
         {
-            var payloadType = e.Payload.GetType();
-            var serializer = Serialization.FindSerializerForType(payloadType, Configuration.DefaultSerializer);
-
-            string manifest = "";
-            if (serializer is SerializerWithStringManifest)
-            {
-                manifest = ((SerializerWithStringManifest)serializer).Manifest(e.Payload);
-            }
-            else
-            {
-                if (serializer.IncludeManifest)
-                {
-                    manifest = e.Payload.GetType().TypeQualifiedName();
-                }
-            }
-
-            var binary = serializer.ToBinary(e.Payload);
+            var serializer = Serialization.FindSerializerFor(e);
+            var binary = serializer.ToBinary(e);
 
             AddParameter(command, "@PersistenceId", DbType.String, e.PersistenceId);
             AddParameter(command, "@SequenceNr", DbType.Int64, e.SequenceNr);
-            AddParameter(command, "@Timestamp", DbType.Int64, TimestampProvider.GenerateTimestamp(e));
-            AddParameter(command, "@IsDeleted", DbType.Boolean, false);
-            AddParameter(command, "@Manifest", DbType.String, manifest);
             AddParameter(command, "@Payload", DbType.Binary, binary);
-            AddParameter(command, "@SerializerId", DbType.Int32, serializer.Identifier);
 
             if (tags.Count != 0)
             {
@@ -687,28 +596,8 @@ namespace Akka.Persistence.Sql.Common.Journal
         /// <returns>TBD</returns>
         protected virtual IPersistentRepresentation ReadEvent(DbDataReader reader)
         {
-            var persistenceId = reader.GetString(PersistenceIdIndex);
-            var sequenceNr = reader.GetInt64(SequenceNrIndex);
-            var timestamp = reader.GetInt64(TimestampIndex);
-            var isDeleted = reader.GetBoolean(IsDeletedIndex);
-            var manifest = reader.GetString(ManifestIndex);
-            var payload = reader[PayloadIndex];
-
-            object deserialized;
-            if (reader.IsDBNull(SerializerIdIndex))
-            {
-                // Support old writes that did not set the serializer id
-                var type = Type.GetType(manifest, true);
-                var deserializer = Serialization.FindSerializerForType(type, Configuration.DefaultSerializer);
-                deserialized = deserializer.FromBinary((byte[])payload, type);
-            }
-            else
-            {
-                var serializerId = reader.GetInt32(SerializerIdIndex);
-                deserialized = Serialization.Deserialize((byte[])payload, serializerId, manifest);
-            }
-
-            return new Persistent(deserialized, sequenceNr, persistenceId, manifest, isDeleted, ActorRefs.NoSender, null);
+            var serializer = Serialization.FindSerializerForType(typeof(Persistent));
+            return serializer.FromBinary<Persistent>((byte[])reader[PayloadIndex]);
         }
 
         /// <summary>

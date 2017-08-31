@@ -33,10 +33,6 @@ Both journal and snapshot store share the same configuration keys (however they 
 - `table-name` - name of the table used by either journal or snapshot store. Default: *event_journal* (for journal) or *snapshot_store* (for snapshot store)
 - `auto-initialize` - flag determining if journal or snapshot store related tables should by automatically created when they have not been found in connected database. Default: *false*
 
-In addition, journal configuration specifies additional field:
-
-- `timestamp-provider` - fully qualified type name (with assembly) of the class responsible for generating timestamp values based on persisted message type. By default this points to *Akka.Persistence.Sql.Common.Journal.DefaultTimestampProvider, Akka.Persistence.Sql.Common*, which returns current UTC DateTime value.
-
 ### In-memory databases
 
 Akka.Persistence.Sqlite plugin allows to use in-memory databases, however requires to use them in shared mode in order to work correctly. Example connection strings for such configurations are described below:
@@ -50,11 +46,11 @@ SQLite persistence plugin defines a default table schema used for both journal a
 
 **EventJournal table**:
 
-    +------------+----------------+-------------+------------+----------------+------------+---------+
-    |  ordering  | persistence_id | sequence_nr | is_deleted |    manifest    | timestamp  | payload |
-    +------------+----------------+-------------+------------+----------------+------------+---------+
-    | integer(8) |  varchar(255)  | integer(8)  | integer(1) |  varchar(255)  | integer(8) |   blob  |
-    +------------+----------------+-------------+------------+----------------+------------+---------+
+    +------------+----------------+-------------+----------------+---------+
+    |  ordering  | persistence_id | sequence_nr |      tags      | payload |
+    +------------+----------------+-------------+----------------+---------+
+    | integer(8) |  varchar(255)  | integer(8)  |  varchar(2000) |   blob  |
+    +------------+----------------+-------------+----------------+---------+
 
 **SnapshotStore table**:
 
