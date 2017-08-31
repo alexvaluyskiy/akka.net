@@ -13,25 +13,25 @@ using Akka.Actor;
 using Akka.Persistence.Fsm;
 using Akka.Persistence.Serialization.Proto.Msg;
 using Akka.Serialization;
+using Akka.Util;
 using Google.Protobuf;
 
 namespace Akka.Persistence.Serialization
 {
-    public class PersistenceMessageSerializer : Serializer
+    public sealed class PersistenceMessageSerializer : Serializer
     {
         public PersistenceMessageSerializer(ExtendedActorSystem system) : base(system)
         {
-            IncludeManifest = true;
         }
 
-        public override bool IncludeManifest { get; }
+        public override bool IncludeManifest { get; } = true;
 
         public override byte[] ToBinary(object obj)
         {
-            if (obj is IPersistentRepresentation) return GetPersistentMessage((IPersistentRepresentation)obj).ToByteArray();
-            if (obj is AtomicWrite) return GetAtomicWrite((AtomicWrite)obj).ToByteArray();
-            if (obj is AtLeastOnceDeliverySnapshot) return GetAtLeastOnceDeliverySnapshot((AtLeastOnceDeliverySnapshot)obj).ToByteArray();
-            if (obj is PersistentFSM.StateChangeEvent) return GetStateChangeEvent((PersistentFSM.StateChangeEvent)obj).ToByteArray();
+            if (obj is IPersistentRepresentation repr) return GetPersistentMessage(repr).ToByteArray();
+            if (obj is AtomicWrite aw) return GetAtomicWrite(aw).ToByteArray();
+            if (obj is AtLeastOnceDeliverySnapshot deliverySnapshot) return GetAtLeastOnceDeliverySnapshot(deliverySnapshot).ToByteArray();
+            if (obj is PersistentFSM.StateChangeEvent stateChangeEvent) return GetStateChangeEvent(stateChangeEvent).ToByteArray();
             if (obj.GetType().GetGenericTypeDefinition() == typeof(PersistentFSM.PersistentFSMSnapshot<>)) return GetPersistentFSMSnapshot(obj).ToByteArray();
 
             throw new ArgumentException($"Can't serialize object of type [{obj.GetType()}] in [{GetType()}]");
@@ -56,19 +56,17 @@ namespace Akka.Persistence.Serialization
         private PersistentPayload GetPersistentPayload(object obj)
         {
             Serializer serializer = system.Serialization.FindSerializerFor(obj);
-            PersistentPayload payload = new PersistentPayload();
+            var payload = new PersistentPayload();
 
-            if (serializer is SerializerWithStringManifest)
+            if (serializer is SerializerWithStringManifest serializerManifest)
             {
-                string manifest = ((SerializerWithStringManifest)serializer).Manifest(obj);
-                payload.PayloadManifest = ByteString.CopyFromUtf8(manifest);
+                payload.PayloadManifest = ByteString.CopyFromUtf8(serializerManifest.Manifest(obj));
             }
             else
             {
                 if (serializer.IncludeManifest)
                 {
-                    var payloadType = obj.GetType();
-                    payload.PayloadManifest = ByteString.CopyFromUtf8(payloadType.AssemblyQualifiedName);
+                    payload.PayloadManifest = ByteString.CopyFromUtf8(obj.GetType().TypeQualifiedName());
                 }
             }
 
@@ -80,7 +78,7 @@ namespace Akka.Persistence.Serialization
 
         private Proto.Msg.AtomicWrite GetAtomicWrite(AtomicWrite write)
         {
-            Proto.Msg.AtomicWrite message = new Proto.Msg.AtomicWrite();
+            var message = new Proto.Msg.AtomicWrite();
             foreach (var pr in (IImmutableList<IPersistentRepresentation>)write.Payload)
             {
                 message.Payload.Add(GetPersistentMessage(pr));
@@ -90,7 +88,7 @@ namespace Akka.Persistence.Serialization
 
         private Proto.Msg.AtLeastOnceDeliverySnapshot GetAtLeastOnceDeliverySnapshot(AtLeastOnceDeliverySnapshot snapshot)
         {
-            Proto.Msg.AtLeastOnceDeliverySnapshot message = new Proto.Msg.AtLeastOnceDeliverySnapshot
+            var message = new Proto.Msg.AtLeastOnceDeliverySnapshot
             {
                 CurrentDeliveryId = snapshot.CurrentDeliveryId
             };
@@ -154,7 +152,7 @@ namespace Akka.Persistence.Serialization
             IActorRef sender = ActorRefs.NoSender;
             if (message.Sender != null)
             {
-                sender = system.Provider.ResolveActorRef(message.Sender);
+                sender = system.Provider.ResolveActorRef(message.Sender); // TODO: should we return Deadletters there?
             }
 
             return new Persistent(
@@ -177,7 +175,7 @@ namespace Akka.Persistence.Serialization
 
         private AtomicWrite GetAtomicWrite(byte[] bytes)
         {
-            Proto.Msg.AtomicWrite message = Proto.Msg.AtomicWrite.Parser.ParseFrom(bytes);
+            var message = Proto.Msg.AtomicWrite.Parser.ParseFrom(bytes);
             var payloads = new List<IPersistentRepresentation>();
             foreach (var payload in message.Payload)
             {
@@ -188,7 +186,7 @@ namespace Akka.Persistence.Serialization
 
         private AtLeastOnceDeliverySnapshot GetAtLeastOnceDeliverySnapshot(byte[] bytes)
         {
-            Proto.Msg.AtLeastOnceDeliverySnapshot message = Proto.Msg.AtLeastOnceDeliverySnapshot.Parser.ParseFrom(bytes);
+            var message = Proto.Msg.AtLeastOnceDeliverySnapshot.Parser.ParseFrom(bytes);
 
             var unconfirmedDeliveries = new List<UnconfirmedDelivery>();
             foreach (var unconfirmed in message.UnconfirmedDeliveries)
@@ -202,7 +200,7 @@ namespace Akka.Persistence.Serialization
 
         private PersistentFSM.StateChangeEvent GetStateChangeEvent(byte[] bytes)
         {
-            PersistentStateChangeEvent message = PersistentStateChangeEvent.Parser.ParseFrom(bytes);
+            var message = PersistentStateChangeEvent.Parser.ParseFrom(bytes);
             TimeSpan? timeout = null;
             if (message.TimeoutMillis > 0)
             {
@@ -213,7 +211,7 @@ namespace Akka.Persistence.Serialization
 
         private object GetPersistentFSMSnapshot(Type type, byte[] bytes)
         {
-            PersistentFSMSnapshot message = PersistentFSMSnapshot.Parser.ParseFrom(bytes);
+            var message = PersistentFSMSnapshot.Parser.ParseFrom(bytes);
 
             TimeSpan? timeout = null;
             if (message.TimeoutMillis > 0)

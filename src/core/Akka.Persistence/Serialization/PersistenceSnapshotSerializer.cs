@@ -9,42 +9,40 @@ using System;
 using Akka.Actor;
 using Akka.Persistence.Serialization.Proto.Msg;
 using Akka.Serialization;
+using Akka.Util;
 using Google.Protobuf;
 
 namespace Akka.Persistence.Serialization
 {
-    public class PersistenceSnapshotSerializer : Serializer
+    public sealed class PersistenceSnapshotSerializer : Serializer
     {
         public PersistenceSnapshotSerializer(ExtendedActorSystem system) : base(system)
         {
-            IncludeManifest = true;
         }
 
-        public override bool IncludeManifest { get; }
+        public override bool IncludeManifest { get; } = true;
 
         public override byte[] ToBinary(object obj)
         {
-            if (obj is Snapshot) return GetPersistentPayload(obj as Snapshot).ToByteArray();
+            if (obj is Snapshot snap) return GetPersistentPayload(snap).ToByteArray();
 
             throw new ArgumentException($"Can't serialize object of type [{obj.GetType()}] in [{GetType()}]");
         }
 
         private PersistentPayload GetPersistentPayload(Snapshot snapshot)
         {
-            Serializer serializer = system.Serialization.FindSerializerFor(snapshot.Data);
-            PersistentPayload payload = new PersistentPayload();
+            Serializer serializer = system.Serialization.FindSerializerFor(snapshot);
+            var payload = new PersistentPayload();
 
-            if (serializer is SerializerWithStringManifest)
+            if (serializer is SerializerWithStringManifest serializerManifest)
             {
-                string manifest = ((SerializerWithStringManifest)serializer).Manifest(snapshot.Data);
-                payload.PayloadManifest = ByteString.CopyFromUtf8(manifest);
+                payload.PayloadManifest = ByteString.CopyFromUtf8(serializerManifest.Manifest(snapshot));
             }
             else
             {
                 if (serializer.IncludeManifest)
                 {
-                    var payloadType = snapshot.Data.GetType();
-                    payload.PayloadManifest = ByteString.CopyFromUtf8(payloadType.AssemblyQualifiedName);
+                    payload.PayloadManifest = ByteString.CopyFromUtf8(snapshot.GetType().TypeQualifiedName());
                 }
             }
 
@@ -63,7 +61,7 @@ namespace Akka.Persistence.Serialization
 
         private Snapshot GetSnapshot(byte[] bytes)
         {
-            PersistentPayload payload = PersistentPayload.Parser.ParseFrom(bytes);
+            var payload = PersistentPayload.Parser.ParseFrom(bytes);
 
             string manifest = "";
             if (payload.PayloadManifest != null) manifest = payload.PayloadManifest.ToStringUtf8();
