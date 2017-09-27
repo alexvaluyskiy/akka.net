@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>MaterializationBenchmarks</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.10.9, OS=Windows 10 Redstone 2 (10.0.15063)
+Processor=Intel Core i7-7700K CPU 4.20GHz (Kaby Lake), ProcessorCount=8
+.NET Core SDK=2.0.0
+  [Host]      : .NET Core 2.0.0 (Framework 4.6.00001.0), 64bit RyuJIT
+  NETCORE 2.0 : .NET Core 2.0.0 (Framework 4.6.00001.0), 64bit RyuJIT
+</code></pre>
+<pre><code>Job=NETCORE 2.0  Platform=X64  Runtime=Core  
+Server=True  Toolchain=CoreCsProj  
+</code></pre>
+
+<table>
+<thead><tr><th>                             Method</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0</th><th>Gen 1</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>         Single_materialization_run</td><td>260.7 us</td><td>4.871 us</td><td>4.318 us</td><td>0.7673</td><td>0.2325</td><td>29.2 KB</td>
+</tr><tr><td>     Single_materialization_runWith</td><td>294.2 us</td><td>5.652 us</td><td>5.287 us</td><td>0.7468</td><td>0.2011</td><td>29.42 KB</td>
+</tr><tr><td>       Source_Empty_materialization</td><td>287.7 us</td><td>6.893 us</td><td>8.466 us</td><td>0.9766</td><td>0.3357</td><td>32.67 KB</td>
+</tr><tr><td>  Source_Enumerator_materialization</td><td>339.3 us</td><td>6.738 us</td><td>7.759 us</td><td>1.3672</td><td>0.5469</td><td>41.46 KB</td>
+</tr><tr><td>  Source_Enumerable_materialization</td><td>340.9 us</td><td>8.143 us</td><td>9.051 us</td><td>1.0376</td><td>0.3357</td><td>41.44 KB</td>
+</tr><tr><td>Source_Single_with_Select_materialization</td><td>322.6 us</td><td>7.167 us</td><td>8.253 us</td><td>0.9988</td><td>0.3773</td><td>38.51 KB</td>
+</tr><tr><td>Source_Single_with_Where_materialization</td><td>324.2 us</td><td>8.203 us</td><td>8.423 us</td><td>1.1985</td><td>0.5105</td><td>38.21 KB</td>
+</tr></tbody></table>
+</body>
+</html>
